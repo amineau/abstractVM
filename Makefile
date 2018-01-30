@@ -1,9 +1,9 @@
 NAME = abstractVm
 CC = g++
 
-SRCS = 
+SRCS = avm.cpp 
 
-INCS =
+INCS = IOperand.hpp Operand.hpp
 
 SPATH = srcs
 OPATH = objs

@@ -31,8 +31,10 @@ objs/
 *.exe
 *.out
 *.app
-# Swap
+amv
+abstractVM
 
+# Swap
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]
 [._]s[a-v][a-z]
@@ -47,11 +49,7 @@ Session.vim
 tags
 
 # Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode
 
 # General
 .DS_Store

@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:14:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/03/27 13:43:40 by amineau          ###   ########.fr       */
+/*   Updated: 2018/03/27 18:32:06 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Operand: public IOperand {
 		};
         Operand( Operand const & src ) { *this = src; };
         Operand & operator=( Operand const & rhs ) {
-            if (this != &rhs)
+            if (this != rhs)
                 ;
             return *this;
         };
@@ -34,6 +34,11 @@ class Operand: public IOperand {
         virtual eOperandType getType( void ) const {
             return this->_type;
         };
+
+		virtual IOperand const * operator+( IOperand const & rhs ) const {
+			//IOperand const * operand(this->_value + dynamic_cast<Operand const *>(&rhs)->_value);
+			//return operand;
+		};
 
         virtual std::string const & toString( void ) const {
             std::ostringstream os;

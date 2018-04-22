@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/29 18:26:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/03/27 18:06:48 by amineau          ###   ########.fr       */
+/*   Updated: 2018/03/28 15:45:16 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,13 @@ class Factory {
 				virtual const char * what() const throw();
 		};
     private:
-		std::stack<const IOperand*>	*_stack;
-        IOperand const *		_createInt8( std::string const & value ) const;
-        IOperand const *		_createInt16( std::string const & value ) const;
-        IOperand const *		_createInt32( std::string const & value ) const;
-        IOperand const *		_createFloat( std::string const & value ) const;
-        IOperand const *		_createDouble( std::string const & value ) const;
+		std::stack<const IOperand*>	*	_stack;
+		IOperand const *				_createInt8( std::string const & value ) const;
+		IOperand const *				_createInt16( std::string const & value ) const;
+		IOperand const *				_createInt32( std::string const & value ) const;
+		IOperand const *				_createFloat( std::string const & value ) const;
+		IOperand const *				_createDouble( std::string const & value ) const;
+		IOperand const *				_getSecondElement( void ) const;
 
 };
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Action.cpp                                         :+:      :+:    :+:   */
+/*   Factory.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:05:23 by amineau           #+#    #+#             */
-/*   Updated: 2018/03/27 18:25:04 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/22 22:59:14 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ Factory &	Factory::operator=( Factory const & rhs ) {
 }
 
 IOperand const *	Factory::createOperand(eOperandType type, std::string const & value) const {
-	const 
 	PTR	f[] = { &Factory::_createInt8,
 				&Factory::_createInt16,
 				&Factory::_createInt32,
@@ -47,7 +46,7 @@ void Factory::push(IOperand const * operand) {
 	this->_stack->push(operand);
 }
 
-void Factory::pop( void ) {
+void Factory::pop() {
 	IOperand const *	operand;
 	if (this->_stack->empty())
 		throw Factory::StackEmptyException();
@@ -68,9 +67,7 @@ void Factory::dump( void ) const {
 void Factory::add( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
-	IOperand const *	ope1 = this->_stack->top();
-	IOperand const *	ope2 = this->_stack->top();
-	IOperand const *	result(*ope1 + *ope2);
+	IOperand const *	result(*this->_stack->top() + *this->_getSecondElement());
 	this->pop();
 	this->pop();
 	this->push(result);
@@ -86,7 +83,7 @@ IOperand const *	Factory::_createInt8( std::string const & value ) const {
 	IOperand * operand;
 
 	try {
-		operand = new Operand<int8_t>(std::stoi(value));
+		operand = new Operand<int8_t>(std::stoi(value), INT8);
 	} catch (Factory::InvalidValueException &iv) {
 		std::cout << iv.what() << std::endl;
 	}
@@ -97,7 +94,7 @@ IOperand const *	Factory::_createInt16( std::string const & value ) const {
 	IOperand * operand;
 
 	try {
-		operand = new Operand<int16_t>(std::stoi(value));
+		operand = new Operand<int16_t>(std::stoi(value), INT16);
 	} catch (Factory::InvalidValueException &iv) {
 		std::cout << iv.what() << std::endl;
 	}
@@ -108,7 +105,7 @@ IOperand const *	Factory::_createInt32( std::string const & value ) const {
 	IOperand * operand;
 
 	try {
-		operand = new Operand<int32_t>(std::stoi(value));
+		operand = new Operand<int32_t>(std::stoi(value), INT32);
 	} catch (Factory::InvalidValueException &iv) {
 		std::cout << iv.what() << std::endl;
 	}
@@ -119,7 +116,7 @@ IOperand const *	Factory::_createFloat( std::string const & value ) const {
 	IOperand * operand;
 
 	try {
-		operand = new Operand<float>(std::stof(value));
+		operand = new Operand<float>(std::stof(value), FLOAT);
 	} catch (Factory::InvalidValueException &iv) {
 		std::cout << iv.what() << std::endl;
 	}
@@ -130,12 +127,19 @@ IOperand const *	Factory::_createDouble( std::string const & value ) const {
 	IOperand * operand;
 
 	try {
-		operand = new Operand<double>(std::stod(value));
+		operand = new Operand<double>(std::stod(value), DOUBLE);
 	} catch (Factory::InvalidValueException &iv) {
 		std::cout << iv.what() << std::endl;
 	}
 	return operand;
 }
+
+IOperand const *	Factory::_getSecondElement( void ) const {
+	std::stack<const IOperand *>	tmp = std::stack<const IOperand*>(*this->_stack);
+	tmp.pop();
+	return tmp.top();
+}
+
 
 const char * Factory::InvalidValueException::what() const throw() {
 	return "Factory::InvalidValueException : The value can't converting";

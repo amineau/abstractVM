@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:14:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/22 22:58:04 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/23 13:46:46 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 template <typename T>
 class Operand: public IOperand {
     public:
-        Operand( T const value, eOperandType type ) {
-			this->_value = value;
+        Operand( double const & value, eOperandType type ) {
+			this->_value = static_cast<T>(value);
             this->_type = type;
             this->_precision = type;
 		};
         Operand( Operand const & src ) {
             *this = src;
-            std::cout << "Constructor ** " << *this << " ** by copy called " << std::endl;
+            std::cout << "Constructor ** " << this->_value << " ** by copy called " << std::endl;
         };
         Operand & operator=( Operand const & rhs ) {
             if (this != &rhs)
@@ -33,7 +33,7 @@ class Operand: public IOperand {
         };
 
         virtual ~Operand( void ) {
-            // std::cout << "Destructor ** " << *this << " ** called" << std::endl;
+            std::cout << "Destructor ** " << this->_value << " ** called" << std::endl;
         };
 
         virtual int getPrecision( void ) const {
@@ -44,44 +44,81 @@ class Operand: public IOperand {
             return this->_type;
         };
 
-        const T   getValue( void ) const {
-            std::cout << "//////// " << this->_value << " //////////" << std::endl;
-            return this->_value;
-        };
-
-        const operator T () const {
-            return this->_value;
+        eOperandType calculateType (IOperand const & rhs) const {
+            return this->getPrecision() < rhs.getPrecision() ? rhs.getType() : this->getType();
         }
 
-        // const operator double () const {
-        //     return this->_value;
-        // }
-
 		virtual IOperand const * operator+( IOperand const & rhs ) const {
-			//IOperand const * operand(this->_value + dynamic_cast<Operand const *>(&rhs)->_value);
-            Operand *       operand;
-            Operand<float> const & rhs_convert = static_cast<Operand<float> const &>(rhs);
-            eOperandType    type;
+            eOperandType    type = this->calculateType(rhs);
+            Factory         fact;
+            double          value = static_cast<double>(this->_value) + std::stod(rhs.toString());
 
-            std::cout << this->getPrecision() << " ***** " << rhs_convert.getPrecision() << std::endl;
-            std::cout << this->getValue() << " ***** " << rhs_convert.getValue() << std::endl;
-            type = this->getPrecision() < rhs.getPrecision() ? rhs.getType() : this->getType();
-            // std::cout << static_cast<double>(rhs_convert) << " ** " << rhs_convert << " **** " << static_cast<double>(*this) << std::endl;
-            // std::cout << *this + rhs_convert << std::endl;
-            if (this->getPrecision() < rhs.getPrecision())
-                operand = new Operand(rhs_convert.getValue(), type);
-            else
-                operand = new Operand(this->getValue(), type);
-			return operand;
+            return fact.createOperand(type, std::to_string(value));
+		};
+
+        virtual IOperand const * operator-( IOperand const & rhs ) const {
+            eOperandType    type = this->calculateType(rhs);
+            Factory         fact;
+            double          value = static_cast<double>(this->_value) - std::stod(rhs.toString());
+
+            return fact.createOperand(type, std::to_string(value));
+		};
+
+        virtual IOperand const * operator*( IOperand const & rhs ) const {
+            eOperandType    type = this->calculateType(rhs);
+            Factory         fact;
+            double          value = static_cast<double>(this->_value) * std::stod(rhs.toString());
+
+            return fact.createOperand(type, std::to_string(value));
+		};
+
+        virtual IOperand const * operator/( IOperand const & rhs ) const {
+            eOperandType    type = this->calculateType(rhs);
+            Factory         fact;
+            double          denominator = std::stod(rhs.toString());
+            double          numerator = static_cast<double>(this->_value);
+
+            if (!denominator)
+                throw DivByZeroException();
+            return fact.createOperand(type, std::to_string(numerator / denominator));
+		};
+
+        virtual IOperand const * operator%( IOperand const & rhs ) const {
+            eOperandType    type = this->calculateType(rhs);
+            Factory         fact;
+            int             denominator = std::stoi(rhs.toString());
+            int             numerator = static_cast<int>(this->_value);
+
+            if (!denominator)
+                throw DivByZeroException();
+            if (type == FLOAT || type == DOUBLE)
+                throw FloatingPointModuloException();
+            return fact.createOperand(type, std::to_string(numerator % denominator));
 		};
 
         virtual std::string const & toString( void ) const {
             std::ostringstream os;
-            os << this->getValue();
+            
+            if (this->_type == INT8)
+                os << static_cast<int16_t>(this->_value);
+            else
+                os << this->_value;
             std::string const *str = new std::string(os.str());
             return *str;
         };
 
+        class DivByZeroException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+                    return "Operand::DivByZeroException : Can't div by 0";
+                }
+		};
+        class FloatingPointModuloException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+                    return "Operand::FloatingPointModuloException : Modulo can't accept float or double values";
+                }
+		};
 
     private:
         T               _value;

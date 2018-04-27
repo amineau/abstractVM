@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:27 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 23:01:04 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/27 19:47:49 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Action::Action( void ) {
 	this->_fmap_action["dump"] = &Action::dump;
 	this->_fmap_action["print"] = &Action::print;
 	this->_fmap_action["exit"] = &Action::exit;
+	this->_fmap_action[";;"] = &Action::exit;
 	this->_fmap_base["push"] = &Action::push;
 	this->_fmap_base["assert"] = &Action::assert;
 }

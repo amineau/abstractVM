@@ -6,17 +6,23 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 23:12:45 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/27 19:46:47 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reader.hpp"
 
-Reader::Reader( ) {
-	;
+Reader::Reader( std::istream & ifs, bool isFile ) :
+    _ifs(ifs)
+  , _isFile(isFile)
+{
+    ;
 }
 
-Reader::Reader( Reader const & src ) {
+Reader::Reader( Reader const & src ) :
+    _ifs(src._ifs)
+  , _isFile(src._isFile)
+{
 	*this = src;
 }
 
@@ -37,16 +43,20 @@ std::smatch const   Reader::_regex(std::regex regex, std::string line) const {
     return match;
 }
 
-std::vector<std::string> Reader::readNextLine ( void ) {
+std::vector<std::string> Reader::readNextLine ( bool & eof ) {
     std::string                 line;
     std::vector<std::string>    vect;
     std::smatch tmp;    
     std::smatch tmp2;
     std::string operand;
 
-    std::getline(std::cin, line);
-    tmp = this->_regex(action_base_regex, line);
-    tmp2 = this->_regex(base_regex, line);   
+    if (!std::getline(this->_ifs, line))
+        eof = true;
+    if (this->_isFile)
+        tmp = this->_regex(action_base_file_regex, line);
+    else
+        tmp = this->_regex(action_base_stdin_regex, line);
+    tmp2 = this->_regex(base_regex, line);
     if (!tmp.size() && !tmp2.size())
         throw ActionException();
     if (tmp.size() && tmp[1].str() != "") {

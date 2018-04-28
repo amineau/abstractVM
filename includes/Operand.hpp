@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:14:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 13:46:46 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/28 19:59:54 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,22 @@ class Operand: public IOperand {
             this->_type = type;
             this->_precision = type;
 		};
+
         Operand( Operand const & src ) {
             *this = src;
-            std::cout << "Constructor ** " << this->_value << " ** by copy called " << std::endl;
         };
+
         Operand & operator=( Operand const & rhs ) {
-            if (this != &rhs)
+            if (this != &rhs) {
                 this->_value = rhs;
                 this->_precision = rhs._precision;
                 this->_type = rhs._type;
+            }
             return *this;
         };
 
         virtual ~Operand( void ) {
-            std::cout << "Destructor ** " << this->_value << " ** called" << std::endl;
+            // std::cout << "Destructor ** " << this->_value << " ** called" << std::endl;
         };
 
         virtual int getPrecision( void ) const {

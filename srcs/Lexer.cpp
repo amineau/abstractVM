@@ -1,69 +1,74 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Action.cpp                                         :+:      :+:    :+:   */
+/*   Lexer.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:27 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/27 19:47:49 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/28 23:53:49 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Action.hpp"
+#include "Lexer.hpp"
 
-Action::Action( void ) {
+Lexer::Lexer( bool & exitCommand ) :
+	_exitCommand(exitCommand)
+{
 	this->_stack = new std::stack<const IOperand*>();
-	this->_fmap_action["add"] = &Action::add;
-	this->_fmap_action["sub"] = &Action::sub;
-	this->_fmap_action["mul"] = &Action::mul;
-	this->_fmap_action["div"] = &Action::div;
-	this->_fmap_action["mod"] = &Action::mod;
-	this->_fmap_action["pop"] = &Action::pop;
-	this->_fmap_action["dump"] = &Action::dump;
-	this->_fmap_action["print"] = &Action::print;
-	this->_fmap_action["exit"] = &Action::exit;
-	this->_fmap_action[";;"] = &Action::exit;
-	this->_fmap_base["push"] = &Action::push;
-	this->_fmap_base["assert"] = &Action::assert;
+	this->_fmap_Lexer["add"] = &Lexer::add;
+	this->_fmap_Lexer["sub"] = &Lexer::sub;
+	this->_fmap_Lexer["mul"] = &Lexer::mul;
+	this->_fmap_Lexer["div"] = &Lexer::div;
+	this->_fmap_Lexer["mod"] = &Lexer::mod;
+	this->_fmap_Lexer["pop"] = &Lexer::pop;
+	this->_fmap_Lexer["dump"] = &Lexer::dump;
+	this->_fmap_Lexer["print"] = &Lexer::print;
+	this->_fmap_Lexer["exit"] = &Lexer::exit;
+	this->_fmap_Lexer[";;"] = &Lexer::exit;
+	this->_fmap_base["push"] = &Lexer::push;
+	this->_fmap_base["assert"] = &Lexer::assert;
 }
 
-Action::Action( Action const & src ) {
+Lexer::Lexer( Lexer const & src ) :
+	_exitCommand(src._exitCommand)
+{
 	*this = src;
 }
 
-Action::~Action( void ) {
+Lexer::~Lexer( void ) {
 	delete this->_stack;
 }
 
-Action &	Action::operator=( Action const & rhs ) {
-	if (this != &rhs)
+Lexer &	Lexer::operator=( Lexer const & rhs ) {
+	if (this != &rhs) {
 		;
+	}
 	return *this;
 }
 
-void Action::push(IOperand const * operand) {
+void Lexer::push(IOperand const * operand) {
 	this->_stack->push(operand);
 }
 
-void Action::assert(IOperand const * operand) {
+void Lexer::assert(IOperand const * operand) {
 	if (this->_stack->empty())
-		throw Action::StackEmptyException();
+		throw Lexer::StackEmptyException();
 	if (operand->getPrecision() != this->_stack->top()->getPrecision()
 		|| operand->toString().compare(this->_stack->top()->toString()))
-		throw Action::AssertException();
+		throw Lexer::AssertException();
 }
 
-void Action::pop() {
+void Lexer::pop() {
 	IOperand const *	operand;
 	if (this->_stack->empty())
-		throw Action::StackEmptyException();
+		throw Lexer::StackEmptyException();
 	operand = this->_stack->top();
 	this->_stack->pop();
 	delete operand;
 }
 
-void Action::dump( void ) {
+void Lexer::dump( void ) {
 	std::stack<const IOperand*>	tmp = std::stack<const IOperand*>(*this->_stack);
 	
 	while(!tmp.empty()) {
@@ -72,7 +77,7 @@ void Action::dump( void ) {
 	}
 }
 
-void Action::add( void ) {
+void Lexer::add( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
 	IOperand const *	result(*this->_getSecondElement() + *this->_stack->top());
@@ -81,7 +86,7 @@ void Action::add( void ) {
 	this->push(result);
 }
 
-void Action::sub( void ) {
+void Lexer::sub( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
 	IOperand const *	result(*this->_getSecondElement() - *this->_stack->top());
@@ -90,7 +95,7 @@ void Action::sub( void ) {
 	this->push(result);
 }
 
-void Action::mul( void ) {
+void Lexer::mul( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
 	IOperand const *	result(*this->_getSecondElement() * *this->_stack->top());
@@ -99,7 +104,7 @@ void Action::mul( void ) {
 	this->push(result);
 }
 
-void Action::div( void ) {
+void Lexer::div( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
 	IOperand const *	result(*this->_getSecondElement() / *this->_stack->top());
@@ -108,7 +113,7 @@ void Action::div( void ) {
 	this->push(result);
 }
 
-void Action::mod( void ) {
+void Lexer::mod( void ) {
 	if (this->_stack->size() < 2)
 		throw ValuesNumberException();
 	IOperand const *	result(*this->_getSecondElement() % *this->_stack->top());
@@ -118,40 +123,40 @@ void Action::mod( void ) {
 }
 
 
-void Action::print( void ) {
+void Lexer::print( void ) {
 	if (this->_stack->top()->getType() != INT8)
-		throw Action::AssertException();
+		throw Lexer::AssertException();
 	std::cout << static_cast<int8_t>(std::stoi(this->_stack->top()->toString())) << std::endl;
 }
 
-void Action::exit( void ) {
-	std::exit(0);
+void Lexer::exit( void ) {
+	_exitCommand = true;
 }
 
-void Action::call(const std::string & str) {
-	MFPA fp = _fmap_action[str];
+void Lexer::call(const std::string & str) {
+	MFPA fp = _fmap_Lexer[str];
 	(this->*fp)();
 }
 
-void Action::call(const std::string & str, IOperand const * operand) {
+void Lexer::call(const std::string & str, IOperand const * operand) {
 	MFPB fp = _fmap_base[str];
 	(this->*fp)(operand);
 }
 
-IOperand const *	Action::_getSecondElement( void ) const {
+IOperand const *	Lexer::_getSecondElement( void ) const {
 	std::stack<const IOperand *>	tmp = std::stack<const IOperand*>(*this->_stack);
 	tmp.pop();
 	return tmp.top();
 }
 
-const char * Action::StackEmptyException::what() const throw() {
-	return "Action::StackEmptyException : The stack empty";
+const char * Lexer::StackEmptyException::what() const throw() {
+	return "Lexer::StackEmptyException : The stack empty";
 }
 
-const char * Action::AssertException::what() const throw() {
-	return "Action::AssertException : Assert Error";
+const char * Lexer::AssertException::what() const throw() {
+	return "Lexer::AssertException : Assert Error";
 }
 
-const char * Action::ValuesNumberException::what() const throw() {
-	return "Action::ValuesNumberException : The number of values on stack is strictly inferior to 2";
+const char * Lexer::ValuesNumberException::what() const throw() {
+	return "Lexer::ValuesNumberException : The number of values on stack is strictly inferior to 2";
 }

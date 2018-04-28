@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:05:23 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 22:58:22 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/28 19:57:51 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ Factory::~Factory( void ) {
 }
 
 Factory &	Factory::operator=( Factory const & rhs ) {
-	if (this != &rhs)
+	if (this != &rhs) {
 		;
+	}
 	return *this;
 }
 

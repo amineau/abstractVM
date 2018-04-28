@@ -1,9 +1,9 @@
 NAME = abstractVm
 CC = g++ -std=c++11
 
-SRCS = avm.cpp Factory.cpp Action.cpp Reader.cpp Error.cpp
+SRCS = avm.cpp Factory.cpp Lexer.cpp Parser.cpp Error.cpp Manager.cpp
 
-INCS = IOperand.hpp Operand.hpp Factory.hpp Action.hpp Reader.hpp Error.hpp
+INCS = IOperand.hpp Operand.hpp Factory.hpp Lexer.hpp Parser.hpp Error.hpp Manager.hpp
 
 SPATH = srcs
 OPATH = objs

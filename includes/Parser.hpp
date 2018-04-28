@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Reader.hpp                                         :+:      :+:    :+:   */
+/*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 14:50:51 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/27 19:45:04 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/29 01:07:10 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READER_HPP
-# define READER_HPP
+#ifndef PARSER_HPP
+# define PARSER_HPP
 
 # include <iostream>
 # include <fstream>
@@ -19,19 +19,19 @@
 # include <map>
 
 
-const std::regex base_regex("^[\\s\\t]*(push|assert)[\\s\\t]*([\\w\\d\\.\\(\\)]*)[\\s\\t]*(?:;.*)?$");
+const std::regex base_regex("^[\\s\\t]*(push|assert)[\\s\\t]*([a-z0-9\\(\\).]*)[\\s\\t]*(?:;.*)?$");
 const std::regex action_base_stdin_regex("^[\\s\\t]*(;;|add|mul|sub|mod|div|pop|dump|print)?[\\s\\t]*(?:;.*)?$");
 const std::regex action_base_file_regex("^[\\s\\t]*(exit|add|mul|sub|mod|div|pop|dump|print)?[\\s\\t]*(?:;.*)?$");
 const std::regex operand_regex("^(int(?:8|16|32)|float|double)\\((.*)\\)$");
 const std::regex int_regex("^([-]?[\\d]+)$");
 const std::regex float_regex("([-]?[\\d]+.[\\d]+)");
 
-class Reader {
+class Parser {
     public:
-        Reader( std::istream &, bool );
-        Reader( Reader const & src );
-        Reader & operator=( Reader const & rhs );
-        virtual ~Reader( void );
+        Parser( std::istream &, bool );
+        Parser( Parser const & src );
+        Parser & operator=( Parser const & rhs );
+        virtual ~Parser( void );
 
         std::vector<std::string> readNextLine ( bool & );
 
@@ -52,9 +52,9 @@ class Reader {
 				virtual const char * what() const throw();
 		};
     private:
-        std::smatch const   _regex(std::regex, std::string) const;
-        std::istream &      _ifs;
-        bool                _isFile;
+        bool            _regex(std::string, std::smatch&, std::regex) const;
+        std::istream &  _ifs;
+        bool            _isFile;
 
 };
 

@@ -6,13 +6,15 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:22:22 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 20:50:56 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/28 22:04:26 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ERROR_HPP
 # define ERROR_HPP
+
 # include <string>
+# include <iostream>
 # include <map>
 
 class Error {
@@ -20,8 +22,9 @@ class Error {
         Error() {};
         Error( Error const & src );
         virtual ~Error( void ) {};
-        void    add (int line, std::string exception);
-        void    print ( void ) const;
+        void    add (std::string exception, int line);
+        void    print ( void );
+        bool    isEmpty( void ) const;
     
     private:
         Error & operator=( Error const & rhs );

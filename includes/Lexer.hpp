@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Action.hpp                                         :+:      :+:    :+:   */
+/*   Lexer.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:20 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/23 22:13:30 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/28 21:56:15 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef Action_HPP
-# define Action_HPP
+#ifndef LEXER_HPP
+# define LEXER_HPP
 
 # include "IOperand.hpp"
 # include <stack>
 # include <map>
 # include <string>
 
-class Action {
+class Lexer {
     public:
-        typedef void (Action::*MFPA)(void);
-        typedef void (Action::*MFPB)(IOperand const *);
+        typedef void (Lexer::*MFPA)(void);
+        typedef void (Lexer::*MFPB)(IOperand const *);
         
-        Action( void );
-        Action( Action const & src );
-        Action &   operator=( Action const & rhs );
-        virtual ~Action( void );
+        Lexer( void );
+        Lexer( bool & exitCommand );
+        Lexer( Lexer const & src );
+        Lexer &   operator=( Lexer const & rhs );
+        virtual ~Lexer( void );
 
         void push(IOperand const * operand);
 		void assert(IOperand const * operand);
@@ -56,8 +57,9 @@ class Action {
 		};
 
     private:
+        bool &                          _exitCommand;
         std::stack<const IOperand*>	*	_stack;
-        std::map<std::string, MFPA>     _fmap_action;
+        std::map<std::string, MFPA>     _fmap_Lexer;
         std::map<std::string, MFPB>     _fmap_base;
         IOperand const *				_getSecondElement( void ) const;
 

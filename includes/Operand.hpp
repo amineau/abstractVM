@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:14:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/28 19:59:54 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 00:08:59 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ class Operand: public IOperand {
         };
 
         virtual ~Operand( void ) {
-            // std::cout << "Destructor ** " << this->_value << " ** called" << std::endl;
         };
 
         virtual int getPrecision( void ) const {
@@ -96,6 +95,22 @@ class Operand: public IOperand {
             if (type == FLOAT || type == DOUBLE)
                 throw FloatingPointModuloException();
             return fact.createOperand(type, std::to_string(numerator % denominator));
+		};
+
+        virtual bool operator<( IOperand const & rhs ) const {
+            return static_cast<double>(this->_value) < std::stod(rhs.toString());
+		};
+
+        virtual bool operator>( IOperand const & rhs ) const {
+            return static_cast<double>(this->_value) > std::stod(rhs.toString());
+		};
+
+        virtual bool operator<=( IOperand const & rhs ) const {
+            return static_cast<double>(this->_value) <= std::stod(rhs.toString());
+		};
+
+        virtual bool operator>=( IOperand const & rhs ) const {
+            return static_cast<double>(this->_value) >= std::stod(rhs.toString());
 		};
 
         virtual std::string const & toString( void ) const {

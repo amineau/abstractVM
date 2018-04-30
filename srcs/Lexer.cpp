@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:27 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/28 23:53:49 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 00:19:46 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ Lexer::Lexer( bool & exitCommand ) :
 	this->_fmap_Lexer["pop"] = &Lexer::pop;
 	this->_fmap_Lexer["dump"] = &Lexer::dump;
 	this->_fmap_Lexer["print"] = &Lexer::print;
+	this->_fmap_Lexer["avg"] = &Lexer::avg;
+	this->_fmap_Lexer["min"] = &Lexer::min;
+	this->_fmap_Lexer["max"] = &Lexer::max;
 	this->_fmap_Lexer["exit"] = &Lexer::exit;
 	this->_fmap_Lexer[";;"] = &Lexer::exit;
 	this->_fmap_base["push"] = &Lexer::push;
@@ -124,9 +127,56 @@ void Lexer::mod( void ) {
 
 
 void Lexer::print( void ) {
+	if (this->_stack->empty())
+		throw Lexer::StackEmptyException();
 	if (this->_stack->top()->getType() != INT8)
 		throw Lexer::AssertException();
 	std::cout << static_cast<int8_t>(std::stoi(this->_stack->top()->toString())) << std::endl;
+}
+
+void Lexer::avg( void ) {
+	if (this->_stack->empty())
+		throw Lexer::StackEmptyException();
+	std::stack<const IOperand*>	tmp = std::stack<const IOperand*>(*this->_stack);
+	double total = 0.0;
+	int count = 0;
+
+	while(!tmp.empty()) {
+		total += std::stod(tmp.top()->toString());
+		tmp.pop();
+		count++;
+	}
+	std::cout << total / count << std::endl;
+}
+
+void Lexer::min( void ) {
+	if (this->_stack->empty())
+		throw Lexer::StackEmptyException();
+	std::stack<const IOperand*>	tmp = std::stack<const IOperand*>(*this->_stack);
+	IOperand *					operand = const_cast<IOperand*>(this->_stack->top());
+	tmp.pop();
+
+	while (!tmp.empty()) {
+		if (*operand > *tmp.top())
+			operand = const_cast<IOperand*>(tmp.top());
+		tmp.pop();
+	}
+	std::cout << operand->toString() << std::endl;
+}
+
+void Lexer::max( void ) {
+	if (this->_stack->empty())
+		throw Lexer::StackEmptyException();
+	std::stack<const IOperand*>	tmp = std::stack<const IOperand*>(*this->_stack);
+	IOperand *					operand = const_cast<IOperand*>(this->_stack->top());
+	tmp.pop();
+
+	while (!tmp.empty()) {
+		if (*operand < *tmp.top())
+			operand = const_cast<IOperand*>(tmp.top());
+		tmp.pop();
+	}
+	std::cout << operand->toString() << std::endl;
 }
 
 void Lexer::exit( void ) {

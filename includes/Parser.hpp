@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 14:50:51 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 22:49:46 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 00:23:03 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <map>
 
 
-const std::regex base_regex("^[\\s\\t]*(push|assert)[\\s\\t]*([a-z0-9\\(\\).]*)[\\s\\t]*(?:;.*)?$");
-const std::regex action_base_stdin_regex("^[\\s\\t]*(;;|add|mul|sub|mod|div|pop|dump|print)?[\\s\\t]*(?:;.*)?$");
-const std::regex action_base_file_regex("^[\\s\\t]*(exit|add|mul|sub|mod|div|pop|dump|print)?[\\s\\t]*(?:;.*)?$");
+const std::regex base_regex("^[\\s\\t]*(push|assert)[\\s\\t]*([\\-a-z0-9\\(\\).]*)[\\s\\t]*(?:;.*)?$");
+const std::regex action_base_stdin_regex("^[\\s\\t]*(;;|add|mul|sub|mod|div|pop|dump|print|avg|min|max)?[\\s\\t]*(?:;.*)?$");
+const std::regex action_base_file_regex("^[\\s\\t]*(exit|add|mul|sub|mod|div|pop|dump|print|avg|min|max)?[\\s\\t]*(?:;.*)?$");
 const std::regex operand_regex("^(int(?:8|16|32)|float|double)\\((.*)\\)$");
 const std::regex int_regex("^([-]?[\\d]+)$");
 const std::regex float_regex("^([-]?[\\d]+.[\\d]+)$");

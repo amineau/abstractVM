@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:20 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/28 21:56:15 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 23:51:34 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ class Lexer {
         void dump( void );
         void print( void );
         void exit( void );
+        void avg( void );
+        void min( void );
+        void max( void );
         void call( const std::string & str );
         void call( const std::string & str, IOperand const * operand );
         

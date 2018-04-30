@@ -32,7 +32,7 @@ objs/
 *.out
 *.app
 amv
-abstractVM
+abstractVm
 
 # Swap
 [._]*.s[a-v][a-z]

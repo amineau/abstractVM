@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:27:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 23:15:37 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 23:28:44 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void    Error::print( std::vector<std::string> & listCmd ) {
 }
 
 void Error::_printCmd( std::vector<std::string> & listCmd, int line ) {
-    if (static_cast<int>(listCmd.size()) >= line) {
+    if (line < static_cast<int>(listCmd.size())) {
         if (line - 1 >= 0) {
             std::cout << "\033[90m#"; 
             std::cout << std::cout.width(2) << line << " " << listCmd[line - 1] << "\033[0m" << std::endl;

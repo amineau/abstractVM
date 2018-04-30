@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:27:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/28 23:54:41 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:38:00 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,17 @@ Manager & Manager::operator=( Manager const & rhs) {
 }
 
 
-void    Manager::start( int & numLine ) {
+std::vector<std::string> *  Manager::start( int & numLine ) {
+	std::vector<std::string> *	listCmd = new std::vector<std::string>();
+	std::vector<std::string>	vect;
     Factory fact;
-	Parser	*parser;
+	Parser	*parser = new Parser((_isFile) ? _ifs : std::cin, _isFile, *listCmd);
 	Lexer   *lexer = new Lexer(_UseExitCommand);
     bool       eof = false;
 	std::string	                line;
-	std::vector<std::string>	vect;
 
     while (!eof && !_UseExitCommand) {
 		try {
-			parser = new Parser((_isFile) ? _ifs : std::cin, _isFile);
 			vect = parser->readNextLine(eof);
 			if (vect.size() == 1) {
 				lexer->call(vect[0]);
@@ -68,6 +68,7 @@ void    Manager::start( int & numLine ) {
 		numLine++;
 	}
     delete lexer;
+    return listCmd;
 }
 
 bool    Manager::checkUseExitCommand ( void ) {

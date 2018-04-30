@@ -6,15 +6,16 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 22:20:51 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:50:08 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
 
-Parser::Parser( std::istream & ifs, bool isFile ) :
+Parser::Parser( std::istream & ifs, bool isFile, std::vector<std::string> & listCmd ) :
     _ifs(ifs)
   , _isFile(isFile)
+  , _listCmd(listCmd)
 {
     ;
 }
@@ -22,6 +23,7 @@ Parser::Parser( std::istream & ifs, bool isFile ) :
 Parser::Parser( Parser const & src ) :
     _ifs(src._ifs)
   , _isFile(src._isFile)
+  , _listCmd(src._listCmd)
 {
 	*this = src;
 }
@@ -47,7 +49,7 @@ std::vector<std::string> Parser::readNextLine ( bool & eof ) {
 
     if (!std::getline(this->_ifs, line))
         eof = true;
-    std::cout << line << std::endl;
+    _listCmd.push_back(line);
     base = (this->_isFile) ? action_base_file_regex : action_base_stdin_regex;
     if (std::regex_match(line, match_action_base, base)) {
         if (match_action_base[1].str() != "")

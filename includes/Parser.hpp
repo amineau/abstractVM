@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 14:50:51 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 22:22:53 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:49:46 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ const std::regex float_regex("^([-]?[\\d]+.[\\d]+)$");
 
 class Parser {
     public:
-        Parser( std::istream &, bool );
+        Parser( std::istream &, bool, std::vector<std::string> &);
         Parser( Parser const & src );
         Parser & operator=( Parser const & rhs );
         virtual ~Parser( void );
@@ -54,6 +54,7 @@ class Parser {
     private:
         std::istream &  _ifs;
         bool            _isFile;
+        std::vector<std::string> &  _listCmd;
 
 };
 

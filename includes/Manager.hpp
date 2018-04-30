@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:22:22 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/28 21:58:09 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:37:48 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ class Manager {
         Manager( Manager const & src );
         Manager & operator=( Manager const & rhs );
         virtual ~Manager( void ) {};
-        void    start ( int & );
-        bool    checkUseExitCommand ( void );
+        std::vector<std::string> *  start ( int & );
+        bool                        checkUseExitCommand ( void );
 
         class TooManyArgumentException : public std::exception {
 			public:

@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/29 00:57:27 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:20:51 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,6 @@ Parser::~Parser( ) {
 	;
 }
 
-bool    Parser::_regex(std::string line, std::smatch & match, std::regex regex) const {
-    std::cout << line <<  std::endl;
-    return std::regex_match(line, match, regex);
-}
-
 std::vector<std::string> Parser::readNextLine ( bool & eof ) {
     std::string                 line;
     std::vector<std::string>    vect;
@@ -54,21 +49,23 @@ std::vector<std::string> Parser::readNextLine ( bool & eof ) {
         eof = true;
     std::cout << line << std::endl;
     base = (this->_isFile) ? action_base_file_regex : action_base_stdin_regex;
-    if (_regex(line, match_action_base, base) && match_action_base[1].str() != "") {
-        vect.push_back(match_action_base[1].str());
-    } else if (_regex(line, match_base, base_regex)) {
+    if (std::regex_match(line, match_action_base, base)) {
+        if (match_action_base[1].str() != "")
+            vect.push_back(match_action_base[1].str());
+    } else if (std::regex_match(line, match_base, base_regex)) {
         vect.push_back(match_base[1].str());
         std::smatch match_operand;
-        if (_regex(match_base[2].str(), match_operand, operand_regex)) {
-            std::cout << match_operand[0].str() << " - " << " # " <<  match_base[0].str()<<" # " <<  match_base[1].str()<<" # " <<  match_base[2].str()<< std::endl;
+        line = match_base[2].str();
+        if (std::regex_match(line, match_operand, operand_regex)) {
             operand = match_operand[1].str();
             vect.push_back(operand);
             std::smatch match_value;
+            line = match_operand[2].str();
             if (operand == "float" || operand == "double") {
-                if (!_regex(match_operand[2].str(), match_value, float_regex))
+                if (!std::regex_match(line, match_value, float_regex))
                     throw FloatException();
             } else {
-                if (!_regex(match_operand[2].str(), match_value, int_regex))
+                if (!std::regex_match(line, match_value, int_regex))
                     throw IntegerException();
             }
             vect.push_back(match_value[1].str());

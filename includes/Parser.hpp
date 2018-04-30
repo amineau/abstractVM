@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 14:50:51 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/29 01:07:10 by amineau          ###   ########.fr       */
+/*   Updated: 2018/04/30 22:22:53 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ const std::regex action_base_stdin_regex("^[\\s\\t]*(;;|add|mul|sub|mod|div|pop|
 const std::regex action_base_file_regex("^[\\s\\t]*(exit|add|mul|sub|mod|div|pop|dump|print)?[\\s\\t]*(?:;.*)?$");
 const std::regex operand_regex("^(int(?:8|16|32)|float|double)\\((.*)\\)$");
 const std::regex int_regex("^([-]?[\\d]+)$");
-const std::regex float_regex("([-]?[\\d]+.[\\d]+)");
+const std::regex float_regex("^([-]?[\\d]+.[\\d]+)$");
 
 class Parser {
     public:
@@ -52,7 +52,6 @@ class Parser {
 				virtual const char * what() const throw();
 		};
     private:
-        bool            _regex(std::string, std::smatch&, std::regex) const;
         std::istream &  _ifs;
         bool            _isFile;
 

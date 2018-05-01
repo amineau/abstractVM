@@ -6,17 +6,39 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 10:14:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/05/01 00:08:59 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 10:12:06 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IOperand.hpp"
+#include <climits>
+#include <cfloat>
+
+typedef struct          s_operand 
+{
+    eOperandType	    type;
+    double		        min;
+    double		        max;
+}		                t_operand;
+  
+static t_operand operands[] =
+{
+    {INT8, SCHAR_MIN, SCHAR_MAX},
+    {INT16, SHRT_MIN, SHRT_MAX},
+    {INT32, INT_MIN, INT_MAX},
+    {FLOAT, -FLT_MAX, FLT_MAX},
+    {DOUBLE, -DBL_MAX, DBL_MAX}
+};
 
 template <typename T>
 class Operand: public IOperand {
     public:
         Operand( double const & value, eOperandType type ) {
-			this->_value = static_cast<T>(value);
+			if (value > operands[type].max)
+                throw OverflowException();
+            if (value < operands[type].min)
+                throw UnderflowException();
+            this->_value = static_cast<T>(value);
             this->_type = type;
             this->_precision = type;
 		};
@@ -136,7 +158,18 @@ class Operand: public IOperand {
                     return "Operand::FloatingPointModuloException : Modulo can't accept float or double values";
                 }
 		};
-
+        class OverflowException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+                    return "Operand::OverflowException : The value is too large";
+                }
+		};
+        class UnderflowException : public std::exception {
+			public:
+				virtual const char * what() const throw() {
+                    return "Operand::UnderflowException : The value is too small";
+                }
+		};
     private:
         T               _value;
         eOperandType    _type;

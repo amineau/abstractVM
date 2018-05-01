@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:20 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 23:51:34 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 11:13:30 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Lexer {
         typedef void (Lexer::*MFPB)(IOperand const *);
         
         Lexer( void );
-        Lexer( bool & exitCommand );
+        Lexer( bool & exitCommand, bool & eof );
         Lexer( Lexer const & src );
         Lexer &   operator=( Lexer const & rhs );
         virtual ~Lexer( void );
@@ -40,6 +40,7 @@ class Lexer {
         void dump( void );
         void print( void );
         void exit( void );
+        void eof( void );
         void avg( void );
         void min( void );
         void max( void );
@@ -58,9 +59,18 @@ class Lexer {
 			public:
 				virtual const char * what() const throw();
 		};
+        class CmdAfterExitException : public std::exception {
+			public:
+				virtual const char * what() const throw();
+		};
+        class NoExitCommandException : public std::exception {
+			public:
+				virtual const char * what() const throw();
+		};
 
     private:
         bool &                          _exitCommand;
+        bool &                          _eof;
         std::stack<const IOperand*>	*	_stack;
         std::map<std::string, MFPA>     _fmap_Lexer;
         std::map<std::string, MFPB>     _fmap_base;

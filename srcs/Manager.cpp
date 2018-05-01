@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:27:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/04/30 23:29:57 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 11:11:49 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ std::vector<std::string> *  Manager::start( int & numLine ) {
 	std::vector<std::string> *	listCmd = new std::vector<std::string>();
 	std::vector<std::string>	vect;
     Factory fact;
-	Parser	*parser = new Parser((_isFile) ? _ifs : std::cin, _isFile, *listCmd);
-	Lexer   *lexer  = new Lexer(_UseExitCommand);
     bool       eof  = false;
+	Parser	*parser = new Parser((_isFile) ? _ifs : std::cin, _isFile, *listCmd);
+	Lexer   *lexer  = new Lexer(_UseExitCommand, eof);
 	std::string	                line;
 
-    while (!eof && !_UseExitCommand) {
+    while (!eof) {
 		try {
 			vect = parser->readNextLine(eof);
 			if (vect.size() == 1) {

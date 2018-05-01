@@ -6,14 +6,15 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 10:10:27 by amineau           #+#    #+#             */
-/*   Updated: 2018/05/01 00:19:46 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 11:14:25 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Lexer.hpp"
 
-Lexer::Lexer( bool & exitCommand ) :
+Lexer::Lexer( bool & exitCommand, bool & eof ) :
 	_exitCommand(exitCommand)
+  , _eof(eof)
 {
 	this->_stack = new std::stack<const IOperand*>();
 	this->_fmap_Lexer["add"] = &Lexer::add;
@@ -28,13 +29,14 @@ Lexer::Lexer( bool & exitCommand ) :
 	this->_fmap_Lexer["min"] = &Lexer::min;
 	this->_fmap_Lexer["max"] = &Lexer::max;
 	this->_fmap_Lexer["exit"] = &Lexer::exit;
-	this->_fmap_Lexer[";;"] = &Lexer::exit;
+	this->_fmap_Lexer[";;"] = &Lexer::eof;
 	this->_fmap_base["push"] = &Lexer::push;
 	this->_fmap_base["assert"] = &Lexer::assert;
 }
 
 Lexer::Lexer( Lexer const & src ) :
 	_exitCommand(src._exitCommand)
+  , _eof(src._eof)
 {
 	*this = src;
 }
@@ -183,12 +185,22 @@ void Lexer::exit( void ) {
 	_exitCommand = true;
 }
 
+void Lexer::eof( void ) {
+	_eof = true;
+	if (!_exitCommand)
+		throw NoExitCommandException();
+}
+
 void Lexer::call(const std::string & str) {
+	if (_exitCommand && str != ";;")
+		throw CmdAfterExitException();
 	MFPA fp = _fmap_Lexer[str];
 	(this->*fp)();
 }
 
 void Lexer::call(const std::string & str, IOperand const * operand) {
+	if (_exitCommand)
+		throw CmdAfterExitException();
 	MFPB fp = _fmap_base[str];
 	(this->*fp)(operand);
 }
@@ -209,4 +221,12 @@ const char * Lexer::AssertException::what() const throw() {
 
 const char * Lexer::ValuesNumberException::what() const throw() {
 	return "Lexer::ValuesNumberException : The number of values on stack is strictly inferior to 2";
+}
+
+const char * Lexer::CmdAfterExitException::what() const throw() {
+	return "Lexer::CmdAfterExitException : Command found after the exit instruction";
+}
+
+const char * Lexer::NoExitCommandException::what() const throw() {
+	return "Lexer::NoExitCommandException : Command exit not found";
 }

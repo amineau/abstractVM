@@ -6,7 +6,7 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:27:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/05/01 11:11:49 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/01 11:19:38 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ const char * Manager::TooManyArgumentException::what() const throw() {
 }
 
 const char * Manager::FileOpenException::what() const throw() {
-	return "Manager::FileOpenException : The number of argument is too large";
+	return "Manager::FileOpenException : Can't open file";
 }
 
 const char * Manager::NoExitException::what() const throw() {

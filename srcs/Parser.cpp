@@ -47,6 +47,8 @@ std::vector<std::string> Parser::readNextLine ( bool & eof ) {
     std::regex  base;
     std::string operand;
 
+    if (!this->_isFile)
+	std::cout << ">>> ";
     if (!std::getline(this->_ifs, line))
         eof = true;
     _listCmd.push_back(line);

@@ -6,18 +6,19 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:54 by amineau           #+#    #+#             */
-/*   Updated: 2018/05/01 11:11:34 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/23 19:36:10 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
+#include "unistd.h"
 
 Parser::Parser( std::istream & ifs, bool isFile, std::vector<std::string> & listCmd ) :
     _ifs(ifs)
   , _isFile(isFile)
   , _listCmd(listCmd)
 {
-    ;
+	;
 }
 
 Parser::Parser( Parser const & src ) :
@@ -47,8 +48,8 @@ std::vector<std::string> Parser::readNextLine ( bool & eof ) {
     std::regex  base;
     std::string operand;
 
-    if (!this->_isFile)
-	std::cout << ">>> ";
+    if (!this->_isFile && isatty(STDIN_FILENO))
+        std::cout << ">>> ";
     if (!std::getline(this->_ifs, line))
         eof = true;
     _listCmd.push_back(line);

@@ -6,11 +6,12 @@
 /*   By: amineau <amineau@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 16:27:33 by amineau           #+#    #+#             */
-/*   Updated: 2018/05/01 11:19:38 by amineau          ###   ########.fr       */
+/*   Updated: 2018/05/24 12:53:04 by amineau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Manager.hpp"
+#include "unistd.h"
 
 Manager::Manager (int ac, char **av, Error & errors) :
     _UseExitCommand(false)
@@ -60,7 +61,7 @@ std::vector<std::string> *  Manager::start( int & numLine ) {
 				lexer->call(vect[0], fact.createOperand(vect[1], vect[2]));
 			}
 		} catch (std::exception &e) {
-            if (_isFile)
+			if (_isFile || !isatty(STDIN_FILENO))
 			    _errors.add(e.what(), numLine);
             else
 			    std::cout << e.what() << std::endl;
